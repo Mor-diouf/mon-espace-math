@@ -335,6 +335,43 @@
   background-size: 24px 24px;
 }
 
+/* Quadrillage teinté de la couleur du texte (bandeau d'une annonce, sur fond clair comme sombre). */
+@utility tint-grid {
+  background-image:
+    linear-gradient(color-mix(in oklch, currentColor 9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklch, currentColor 9%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Annonces : entrée des cartes, cloche de l'urgence. Utilisées via motion-safe: uniquement. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ring {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  15%,
+  45% {
+    transform: rotate(-14deg);
+  }
+  30%,
+  60% {
+    transform: rotate(14deg);
+  }
+  75% {
+    transform: rotate(-6deg);
+  }
+}
+
 /* Écran de bienvenue : visible seulement si le script de __root.tsx a marqué un premier lancement. */
 .first-run-only {
   display: none;

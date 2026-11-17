@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { btnOutline, btnPrimary, Pending, Segmented } from "@/components/kit";
 import { TopBar } from "@/components/TopBar";
+import { CatMedallion } from "@/components/CatBadge";
 import { addAnnonce, ANNONCE_CATS, removeAnnonce, useAnnonces } from "@/lib/annonces";
 import { recheckAuth, signIn, signOut, useAuth } from "@/lib/auth";
 import { addDoc, MAX_PDF_BYTES, removeDoc, useDocs, useDocsStatus } from "@/lib/docs";
@@ -254,16 +255,19 @@ function Select({
   name,
   options,
   defaultValue,
+  onChange,
 }: {
   name: string;
   options: readonly string[];
   defaultValue?: string;
+  onChange?: (value: string) => void;
 }) {
   return (
     <span className="relative block">
       <select
         name={name}
         defaultValue={defaultValue ?? options[0]}
+        onChange={onChange && ((e) => onChange(e.target.value))}
         className={`${input} appearance-none pr-9`}
       >
         {options.map((o) => (
@@ -426,6 +430,7 @@ function DocForm({ demo }: { demo: boolean }) {
 function AnnonceForm() {
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
+  const [cat, setCat] = useState<string>(ANNONCE_CATS[0]);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -451,6 +456,7 @@ function AnnonceForm() {
         body: str(f, "body") || desc || title,
       });
       form.reset();
+      setCat(ANNONCE_CATS[0]);
       toast.success("Annonce publiée", {
         action: {
           label: "Voir",
@@ -475,7 +481,12 @@ function AnnonceForm() {
         />
       </Field>
       <Field label="Catégorie">
-        <Select name="cat" options={ANNONCE_CATS} />
+        <div className="flex items-center gap-3">
+          <CatMedallion cat={cat} size="md" />
+          <div className="min-w-0 flex-1">
+            <Select name="cat" options={ANNONCE_CATS} onChange={setCat} />
+          </div>
+        </div>
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Date" required>
@@ -493,6 +504,10 @@ function AnnonceForm() {
       </Field>
       <Field label="Texte complet">
         <textarea name="body" rows={4} className={input} />
+        <p className="mt-1.5 text-xs text-muted-foreground">
+          Astuce : les emojis du clavier 🎓📐🏆 sont acceptés dans le titre et le texte.
+          {cat === "Urgent" && " Une annonce Urgent reste épinglée en haut jusqu'à sa date."}
+        </p>
       </Field>
       <button disabled={busy} className={`${btnPrimary} w-full`}>
         <Megaphone className="h-5 w-5" />

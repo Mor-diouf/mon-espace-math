@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarDays, Clock, MapPin, MegaphoneOff, Share2 } from "lucide-react";
+import { MapPin, MegaphoneOff, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { CatMedallion, catStyle } from "@/components/CatBadge";
+import { Confetti } from "@/components/Confetti";
 import { ActionBar, btnPrimary, DemoNote, EmptyState, Pending } from "@/components/kit";
 import { TopBar } from "@/components/TopBar";
-import { ANNONCES, useAnnonce, useAnnoncesStatus, type Annonce } from "@/lib/annonces";
+import { ANNONCES, isPinned, useAnnonce, useAnnoncesStatus, type Annonce } from "@/lib/annonces";
 import { isPending } from "@/lib/remote";
 import { useHydrated } from "@/lib/store";
 import { formatDate, relativeDay, todayISO } from "@/lib/subjects";
@@ -67,6 +69,8 @@ function AnnoncePage() {
 function Detail({ a, demo }: { a: Annonce; demo: boolean }) {
   const today = useHydrated() ? todayISO() : "";
   const rel = relativeDay(a.date, today);
+  const s = catStyle(a.cat);
+  const urgent = isPinned(a, today);
 
   const share = async () => {
     const data = {
@@ -87,16 +91,41 @@ function Detail({ a, demo }: { a: Annonce; demo: boolean }) {
 
   return (
     <>
-      <main className="px-4 pb-action pt-5">
+      {(a.cat === "Résultats" || a.cat === "Événement") && <Confetti id={a.id} />}
+      <main className="px-4 pb-action pt-4">
         <article>
-          {rel && <p className="text-sm font-bold text-primary">{rel}</p>}
-          <h2 className="mt-1 text-[1.375rem] font-extrabold leading-snug tracking-tight">
+          {/* Bandeau de la catégorie : médaillon plein sur quadrillage teinté. */}
+          <div
+            className={`tint-grid relative flex items-center gap-4 overflow-hidden rounded-3xl p-4 ring-1 ring-inset ${s.soft}`}
+          >
+            <CatMedallion
+              cat={a.cat}
+              size="lg"
+              solid
+              className={
+                urgent ? "origin-top motion-safe:animate-[ring_0.9s_ease-in-out_2]" : "shadow-md"
+              }
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-bold uppercase tracking-wider opacity-80">{a.cat}</p>
+              <p className="mt-0.5 text-lg font-extrabold leading-tight text-foreground">
+                {formatDate(a.date)}
+                {a.time ? ` · ${a.time}` : ""}
+              </p>
+              {rel && (
+                <p
+                  className={`mt-1 text-sm font-bold ${rel === "Aujourd'hui" || rel === "Demain" ? "motion-safe:animate-pulse" : ""}`}
+                >
+                  {rel}
+                </p>
+              )}
+            </div>
+          </div>
+          <h2 className="mt-5 text-[1.375rem] font-extrabold leading-snug tracking-tight">
             {a.title}
           </h2>
 
           <ul className="mt-5 divide-y divide-border rounded-2xl bg-card shadow-card">
-            <Info icon={CalendarDays} label="Date" value={formatDate(a.date)} />
-            {a.time && <Info icon={Clock} label="Heure" value={a.time} />}
             <Info icon={MapPin} label="Lieu" value={a.place} />
           </ul>
 

@@ -1,5 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Folder, Home, LayoutGrid, Megaphone, Menu } from "lucide-react";
+import { hasUnseen, seenStore, useAnnonces } from "@/lib/annonces";
+import { useHydrated } from "@/lib/store";
 
 const ITEMS = [
   { l: "Accueil", i: Home, to: "/" },
@@ -20,7 +22,12 @@ const TAB_PATHS: ReadonlySet<string> = new Set(ITEMS.map((i) => i.to));
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const path = pathname.replace(/\/+$/, "") || "/";
+  const annonces = useAnnonces();
+  const seen = seenStore.use();
+  const hydrated = useHydrated();
   if (!TAB_PATHS.has(path)) return null;
+  // Point rouge sur l'onglet Annonces tant que des publications récentes n'ont pas été vues.
+  const unseen = hydrated && path !== "/annonces" && hasUnseen(annonces, seen, Date.now());
 
   return (
     <nav
@@ -38,9 +45,15 @@ export function BottomNav() {
                 className="press flex h-full flex-col items-center justify-center gap-0.5"
               >
                 <span
-                  className={`grid h-8 w-14 place-items-center rounded-full transition-colors ${active ? "bg-primary/12 text-primary" : "text-muted-foreground"}`}
+                  className={`relative grid h-8 w-14 place-items-center rounded-full transition-colors ${active ? "bg-primary/12 text-primary" : "text-muted-foreground"}`}
                 >
                   <I className="h-6 w-6" strokeWidth={active ? 2.4 : 2} />
+                  {to === "/annonces" && unseen && (
+                    <>
+                      <span className="absolute right-3 top-0.5 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-card" />
+                      <span className="sr-only">(nouvelles annonces)</span>
+                    </>
+                  )}
                 </span>
                 <span
                   className={`text-xs ${active ? "font-bold text-foreground" : "font-medium text-muted-foreground"}`}

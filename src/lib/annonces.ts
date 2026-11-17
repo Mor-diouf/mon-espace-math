@@ -13,10 +13,35 @@ export type Annonce = {
   title: string;
   desc: string;
   body: string;
+  /** Date et heure de publication (ISO), pour le badge « Nouveau ». */
+  created?: string;
   local?: boolean;
 };
 
-export const ANNONCE_CATS = ["Conférence", "Atelier", "Tutorat", "Examens", "Info"] as const;
+export const ANNONCE_CATS = [
+  "Conférence",
+  "Atelier",
+  "Tutorat",
+  "Examens",
+  "Résultats",
+  "Événement",
+  "Urgent",
+  "Info",
+] as const;
+
+/** Une annonce « Urgent » à venir est épinglée en haut des listes. */
+export const isPinned = (a: Annonce, today: string) =>
+  a.cat === "Urgent" && (!today || a.date >= today);
+
+/** Publiée il y a moins de 48 h. `now` = 0 tant que l'heure du téléphone n'est pas connue. */
+export const isNew = (a: Annonce, now: number) =>
+  !!a.created && now > 0 && now - Date.parse(a.created) < 48 * 3600_000;
+
+/** Les annonces urgentes à venir d'abord, puis l'ordre chronologique. */
+export const withPinned = (list: Annonce[], today: string) => [
+  ...list.filter((a) => isPinned(a, today)),
+  ...list.filter((a) => !isPinned(a, today)),
+];
 
 // Annonces d'exemple pour la démonstration.
 export const ANNONCES: Annonce[] = [
@@ -77,9 +102,10 @@ type Row = {
   title: string;
   summary: string;
   body: string;
+  created_at: string;
 };
 
-const COLUMNS = "id,cat,event_date,event_time,place,title,summary,body";
+const COLUMNS = "id,cat,event_date,event_time,place,title,summary,body,created_at";
 
 const toAnnonce = (r: Row): Annonce => ({
   id: r.id,
@@ -90,6 +116,7 @@ const toAnnonce = (r: Row): Annonce => ({
   title: r.title,
   desc: r.summary,
   body: r.body,
+  created: r.created_at,
 });
 
 const remoteAnnonces = createRemoteList<Annonce>({
@@ -123,8 +150,23 @@ export const useAnnoncesStatus = (): RemoteStatus => remoteAnnonces.use().status
 
 /** La prochaine annonce à venir (ou la dernière passée s'il n'y en a plus). `today` vide = pas encore connu. */
 export function pickNext(list: Annonce[], today: string): Annonce | undefined {
-  return list.find((a) => a.date >= today) ?? list.at(-1);
+  return list.find((a) => isPinned(a, today)) ?? list.find((a) => a.date >= today) ?? list.at(-1);
 }
+
+/** Dernière publication vue par l'étudiant, pour le point sur l'onglet Annonces. */
+export const seenStore = createStore<string>("mem:annonces-seen", "");
+
+/** Vrai s'il y a des annonces publiées depuis la dernière visite de l'onglet (15 derniers jours). */
+export function hasUnseen(list: Annonce[], seen: string, now: number) {
+  if (now === 0) return false;
+  return list.some(
+    (a) => !!a.created && a.created > seen && now - Date.parse(a.created) < 15 * 24 * 3600_000,
+  );
+}
+
+/** La publication la plus récente (ISO), ou "" s'il n'y en a pas. */
+export const latestCreated = (list: Annonce[]) =>
+  list.reduce((m, a) => (a.created && a.created > m ? a.created : m), "");
 
 export function useAnnonce(id: string) {
   return useAnnonces().find((a) => a.id === id);
@@ -135,9 +177,16 @@ export function useAnnonce(id: string) {
  * en démonstration : la garde sur ce téléphone.
  * Lève une erreur avec un message en français si l'envoi échoue.
  */
-export async function addAnnonce(input: Omit<Annonce, "id" | "local">): Promise<Annonce> {
+export async function addAnnonce(
+  input: Omit<Annonce, "id" | "local" | "created">,
+): Promise<Annonce> {
   if (!supabase || inDemo()) {
-    const a: Annonce = { ...input, id: `local-${Date.now().toString(36)}`, local: true };
+    const a: Annonce = {
+      ...input,
+      id: `local-${Date.now().toString(36)}`,
+      created: new Date().toISOString(),
+      local: true,
+    };
     addedAnnonces.set((cur) => [a, ...cur]);
     return a;
   }

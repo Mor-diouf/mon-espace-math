@@ -145,7 +145,7 @@ function Index() {
               </Link>
             </SectionTitle>
             <ul>
-              <AnnonceCard a={next} today={today} />
+              <AnnonceCard a={next} today={today} now={hydrated ? Date.now() : 0} />
             </ul>
           </section>
         )}
