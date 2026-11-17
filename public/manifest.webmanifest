@@ -3,6 +3,7 @@
   "short_name": "Espace Math",
   "description": "Annales, TD, corrigés et fiches de cours de l'Espace Math de l'UASZ, de la Licence 1 au Master 2.",
   "lang": "fr",
+  "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
