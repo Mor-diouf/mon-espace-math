@@ -201,7 +201,8 @@ export async function removeDoc(id: string): Promise<void> {
   const doc = remoteDocs.get().items.find((d) => d.id === id);
   const { data, error } = await supabase.from("documents").delete().eq("id", id).select("id");
   if (error) throw new Error(errorMessage(error));
-  if (!data || data.length === 0) throw new Error("Ce compte n'a pas le droit de retirer ce document.");
+  if (!data || data.length === 0)
+    throw new Error("Ce compte n'a pas le droit de retirer ce document.");
   if (doc?.filePath) await supabase.storage.from(PDF_BUCKET).remove([doc.filePath]);
   remoteDocs.update((items) => items.filter((d) => d.id !== id));
 }

@@ -168,6 +168,7 @@ export async function removeAnnonce(id: string): Promise<void> {
   }
   const { data, error } = await supabase.from("annonces").delete().eq("id", id).select("id");
   if (error) throw new Error(errorMessage(error));
-  if (!data || data.length === 0) throw new Error("Ce compte n'a pas le droit de retirer cette annonce.");
+  if (!data || data.length === 0)
+    throw new Error("Ce compte n'a pas le droit de retirer cette annonce.");
   remoteAnnonces.update((items) => items.filter((a) => a.id !== id));
 }

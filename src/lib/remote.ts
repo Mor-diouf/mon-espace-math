@@ -88,7 +88,12 @@ export function createRemoteList<T>(opts: {
 
   return {
     get: () => state,
-    use: () => useSyncExternalStore(subscribe, () => state, () => first),
+    use: () =>
+      useSyncExternalStore(
+        subscribe,
+        () => state,
+        () => first,
+      ),
     refresh,
     update,
   };

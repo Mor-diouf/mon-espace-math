@@ -2,14 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BookOpen, CircleCheck, CloudDownload, Download, FileQuestion, Star } from "lucide-react";
 import { toast } from "sonner";
 import { DocList, downloadSoon, SubjectTile, useOfflineToggle } from "@/components/DocRow";
-import {
-  ActionBar,
-  btnOutline,
-  btnPrimary,
-  DemoNote,
-  EmptyState,
-  Pending,
-} from "@/components/kit";
+import { ActionBar, btnOutline, btnPrimary, DemoNote, EmptyState, Pending } from "@/components/kit";
 import { barButton, TopBar } from "@/components/TopBar";
 import { DOCS, useDoc, useDocs, useDocsStatus, useFavorites, type Doc } from "@/lib/docs";
 import { isPending } from "@/lib/remote";

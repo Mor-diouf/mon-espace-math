@@ -383,7 +383,9 @@ function DocForm({ demo }: { demo: boolean }) {
         <Upload aria-hidden className="h-6 w-6 text-primary" />
         <span className="text-[0.9375rem] font-bold">{fileName || "Choisir le fichier PDF"}</span>
         <span className="text-xs text-muted-foreground">
-          {demo ? "En démo, seuls le nom et la taille sont gardés." : "PDF uniquement, 20 Mo au plus."}
+          {demo
+            ? "En démo, seuls le nom et la taille sont gardés."
+            : "PDF uniquement, 20 Mo au plus."}
         </span>
         <input
           name="file"
@@ -490,7 +492,8 @@ function Published({ demo }: { demo: boolean }) {
 
   // En ligne, la suppression retire le document pour tous les étudiants : on demande confirmation.
   const remove = async (title: string, run: () => Promise<void>, done: string) => {
-    if (!demo && !window.confirm(`Retirer définitivement « ${title} » pour tout le monde ?`)) return;
+    if (!demo && !window.confirm(`Retirer définitivement « ${title} » pour tout le monde ?`))
+      return;
     try {
       await run();
       toast(done);
