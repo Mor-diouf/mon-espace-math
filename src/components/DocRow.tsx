@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { type Doc, useDocsStatus, useOffline } from "@/lib/docs";
 import { forgetDoc, storeDoc } from "@/lib/offline";
 import { offlineStore } from "@/lib/store";
-import { findSubject, subjectShort, subjectTile } from "@/lib/subjects";
+import { subjectInfo, subjectShort } from "@/lib/subjects";
 
 /** Tuile carrée à la couleur de la matière, avec son glyphe. C'est elle qui permet de repérer un document d'un coup d'œil. */
 export function SubjectTile({
@@ -14,17 +14,14 @@ export function SubjectTile({
   subject: string;
   className?: string;
 }) {
-  const s = findSubject(subject);
-  const Icon = s?.icon;
+  const s = subjectInfo(subject);
+  const Icon = s.icon;
   return (
-    <div
-      aria-hidden
-      className={`grid shrink-0 place-items-center ${subjectTile(subject)} ${className}`}
-    >
+    <div aria-hidden className={`grid shrink-0 place-items-center ${s.tile} ${className}`}>
       {Icon ? (
         <Icon className="h-[50%] w-[50%]" />
       ) : (
-        <span className="font-serif italic leading-none">{s?.glyph ?? "∑"}</span>
+        <span className="font-serif italic leading-none">{s.glyph ?? "∑"}</span>
       )}
     </div>
   );

@@ -47,22 +47,221 @@ export const formatSize = (bytes: number) =>
 
 // Données de démonstration uniquement — pas de véritables annales de l'UASZ.
 export const DOCS: Doc[] = [
-  { id: "ana-l1-exam-2025", title: "Annales Analyse 1 — session 1", level: "L1", subject: "Analyse", type: "Examen", year: 2025, notions: ["suites", "limites", "continuité", "dérivées"], date: "2026-11-10", size: "2,5 Mo", pages: 4, description: "Sujet d'examen de première session : suites récurrentes, théorème des valeurs intermédiaires et étude de fonctions." },
-  { id: "ana-l1-corr-2025", title: "Corrigé Analyse 1 — session 1", level: "L1", subject: "Analyse", type: "Corrigé", year: 2025, notions: ["suites", "limites", "continuité"], date: "2026-11-09", size: "3,1 Mo", pages: 9, description: "Corrigé détaillé du sujet de première session, avec les erreurs fréquentes signalées." },
-  { id: "alg-l1-td2", title: "Algèbre 1 — TD 2 : polynômes", level: "L1", subject: "Algèbre", type: "TD", year: 2026, notions: ["polynômes", "division euclidienne", "racines"], date: "2026-11-04", size: "0,9 Mo", pages: 3, description: "Division euclidienne, racines multiples et factorisation dans R[X] et C[X]." },
-  { id: "ana-l1-fiche-integrales", title: "Fiche : primitives et intégrales", level: "L1", subject: "Analyse", type: "Fiche de cours", year: 2026, notions: ["intégrales", "primitives", "intégration par parties"], date: "2026-10-30", size: "1,2 Mo", pages: 2, description: "Les primitives usuelles, l'intégration par parties et le changement de variable sur une page recto-verso." },
-  { id: "alg-l2-td3", title: "Algèbre linéaire — TD 3", level: "L2", subject: "Algèbre", type: "TD", year: 2026, notions: ["matrices", "déterminants", "diagonalisation"], date: "2026-11-08", size: "1,1 Mo", pages: 4, description: "Calcul de déterminants, valeurs propres et diagonalisation de matrices 3×3." },
-  { id: "ana-l2-exam-2024", title: "Annales Séries numériques", level: "L2", subject: "Analyse", type: "Examen", year: 2024, notions: ["séries", "convergence", "critère de d'Alembert"], date: "2026-10-22", size: "1,9 Mo", pages: 3, description: "Sujet d'examen sur la convergence des séries numériques et les séries alternées." },
-  { id: "eq-l2-fiche", title: "Fiche : équations différentielles linéaires", level: "L2", subject: "Équations différentielles", type: "Fiche de cours", year: 2026, notions: ["équations différentielles", "ordre 1", "ordre 2", "variation de la constante"], date: "2026-10-18", size: "1,4 Mo", pages: 3, description: "Méthode de résolution des équations linéaires d'ordre 1 et 2 à coefficients constants." },
-  { id: "proba-l2-td1", title: "Probabilités — TD 1 : dénombrement", level: "L2", subject: "Probabilités", type: "TD", year: 2026, notions: ["dénombrement", "probabilité conditionnelle", "Bayes"], date: "2026-10-12", size: "0,8 Mo", pages: 2, description: "Arrangements, combinaisons, probabilités conditionnelles et formule de Bayes." },
-  { id: "topo-l3-fiche", title: "Espaces métriques", level: "L3", subject: "Topologie", type: "Fiche de cours", year: 2026, notions: ["espaces métriques", "compacité", "complétude"], date: "2026-11-05", size: "3,4 Mo", pages: 6, description: "Ouverts, fermés, suites de Cauchy, compacité et théorème du point fixe." },
-  { id: "eq-l3-exam-2025", title: "Annales Équations différentielles", level: "L3", subject: "Équations différentielles", type: "Examen", year: 2025, notions: ["Cauchy-Lipschitz", "systèmes linéaires", "portraits de phase"], date: "2026-10-26", size: "2,2 Mo", pages: 4, description: "Existence et unicité, systèmes différentiels linéaires et étude qualitative." },
-  { id: "stats-l3-td4", title: "Statistiques — TD 4 : estimation", level: "L3", subject: "Statistiques", type: "TD", year: 2026, notions: ["estimation", "maximum de vraisemblance", "intervalles de confiance"], date: "2026-10-15", size: "1,0 Mo", pages: 3, description: "Estimateurs sans biais, maximum de vraisemblance et intervalles de confiance." },
-  { id: "proba-m1-corr", title: "Martingales discrètes", level: "M1", subject: "Probabilités", type: "Corrigé", year: 2025, notions: ["martingales", "temps d'arrêt", "espérance conditionnelle"], date: "2026-11-02", size: "1,8 Mo", pages: 7, description: "Corrigé du devoir sur les martingales, le théorème d'arrêt et les inégalités de Doob." },
-  { id: "ana-m1-exam-2024", title: "Annales Intégration et mesure", level: "M1", subject: "Analyse", type: "Examen", year: 2024, notions: ["mesure", "intégrale de Lebesgue", "convergence dominée"], date: "2026-10-08", size: "2,1 Mo", pages: 3, description: "Tribus, mesures, théorèmes de convergence monotone et dominée." },
-  { id: "af-m2-exam", title: "Analyse fonctionnelle", level: "M2", subject: "Analyse", type: "Examen", year: 2025, notions: ["espaces de Banach", "espaces de Hilbert", "opérateurs compacts"], date: "2026-10-28", size: "2,0 Mo", pages: 4, description: "Théorèmes de Hahn-Banach et de Banach-Steinhaus, opérateurs compacts sur un Hilbert." },
-  { id: "eq-m2-fiche", title: "Fiche : stabilité de Lyapunov", level: "M2", subject: "Équations différentielles", type: "Fiche de cours", year: 2026, notions: ["stabilité", "fonction de Lyapunov", "portraits de phase"], date: "2026-10-20", size: "1,6 Mo", pages: 4, description: "Stabilité des points d'équilibre, linéarisation et fonctions de Lyapunov." },
-  { id: "stats-m2-td", title: "Statistique inférentielle — TD", level: "M2", subject: "Statistiques", type: "TD", year: 2026, notions: ["tests d'hypothèses", "régression linéaire"], date: "2026-10-05", size: "1,3 Mo", pages: 5, description: "Tests paramétriques, test du khi-deux et modèle de régression linéaire." },
+  {
+    id: "ana-l1-exam-2025",
+    title: "Annales Analyse 1 — session 1",
+    level: "L1",
+    subject: "Analyse 1",
+    type: "Examen",
+    year: 2025,
+    notions: ["suites", "limites", "continuité", "dérivées"],
+    date: "2026-11-10",
+    size: "2,5 Mo",
+    pages: 4,
+    description:
+      "Sujet d'examen de première session : suites récurrentes, théorème des valeurs intermédiaires et étude de fonctions.",
+  },
+  {
+    id: "ana-l1-corr-2025",
+    title: "Corrigé Analyse 1 — session 1",
+    level: "L1",
+    subject: "Analyse 1",
+    type: "Corrigé",
+    year: 2025,
+    notions: ["suites", "limites", "continuité"],
+    date: "2026-11-09",
+    size: "3,1 Mo",
+    pages: 9,
+    description:
+      "Corrigé détaillé du sujet de première session, avec les erreurs fréquentes signalées.",
+  },
+  {
+    id: "alg-l1-td2",
+    title: "Algèbre 1 — TD 2 : polynômes",
+    level: "L1",
+    subject: "Algèbre 1",
+    type: "TD",
+    year: 2026,
+    notions: ["polynômes", "division euclidienne", "racines"],
+    date: "2026-11-04",
+    size: "0,9 Mo",
+    pages: 3,
+    description: "Division euclidienne, racines multiples et factorisation dans R[X] et C[X].",
+  },
+  {
+    id: "ana-l1-fiche-integrales",
+    title: "Fiche : primitives et intégrales",
+    level: "L1",
+    subject: "Analyse 2",
+    type: "Fiche de cours",
+    year: 2026,
+    notions: ["intégrales", "primitives", "intégration par parties"],
+    date: "2026-10-30",
+    size: "1,2 Mo",
+    pages: 2,
+    description:
+      "Les primitives usuelles, l'intégration par parties et le changement de variable sur une page recto-verso.",
+  },
+  {
+    id: "alg-l2-td3",
+    title: "Algèbre linéaire — TD 3",
+    level: "L2",
+    subject: "Algèbre 3",
+    type: "TD",
+    year: 2026,
+    notions: ["matrices", "déterminants", "diagonalisation"],
+    date: "2026-11-08",
+    size: "1,1 Mo",
+    pages: 4,
+    description: "Calcul de déterminants, valeurs propres et diagonalisation de matrices 3×3.",
+  },
+  {
+    id: "ana-l2-exam-2024",
+    title: "Annales Séries numériques",
+    level: "L2",
+    subject: "Analyse 3",
+    type: "Examen",
+    year: 2024,
+    notions: ["séries", "convergence", "critère de d'Alembert"],
+    date: "2026-10-22",
+    size: "1,9 Mo",
+    pages: 3,
+    description: "Sujet d'examen sur la convergence des séries numériques et les séries alternées.",
+  },
+  {
+    id: "eq-l2-fiche",
+    title: "Fiche : équation de la chaleur",
+    level: "L2",
+    subject: "Équations aux dérivées partielles",
+    type: "Fiche de cours",
+    year: 2026,
+    notions: ["équation de la chaleur", "séparation des variables", "conditions aux limites"],
+    date: "2026-10-18",
+    size: "1,4 Mo",
+    pages: 3,
+    description:
+      "Résolution de l'équation de la chaleur sur un segment par séparation des variables.",
+  },
+  {
+    id: "proba-l3-td1",
+    title: "Probabilités — TD 1 : dénombrement",
+    level: "L3",
+    subject: "Probabilités",
+    type: "TD",
+    year: 2026,
+    notions: ["dénombrement", "probabilité conditionnelle", "Bayes"],
+    date: "2026-10-12",
+    size: "0,8 Mo",
+    pages: 2,
+    description: "Arrangements, combinaisons, probabilités conditionnelles et formule de Bayes.",
+  },
+  {
+    id: "topo-l3-fiche",
+    title: "Espaces métriques",
+    level: "L3",
+    subject: "Topologie",
+    type: "Fiche de cours",
+    year: 2026,
+    notions: ["espaces métriques", "compacité", "complétude"],
+    date: "2026-11-05",
+    size: "3,4 Mo",
+    pages: 6,
+    description: "Ouverts, fermés, suites de Cauchy, compacité et théorème du point fixe.",
+  },
+  {
+    id: "eq-l3-exam-2025",
+    title: "Annales Calcul différentiel",
+    level: "L3",
+    subject: "Calcul différentiel",
+    type: "Examen",
+    year: 2025,
+    notions: ["différentielle", "inversion locale", "fonctions implicites"],
+    date: "2026-10-26",
+    size: "2,2 Mo",
+    pages: 4,
+    description:
+      "Différentiabilité, théorème d'inversion locale et théorème des fonctions implicites.",
+  },
+  {
+    id: "mesure-l3-td4",
+    title: "Mesure et intégration — TD 4",
+    level: "L3",
+    subject: "Mesure et intégration",
+    type: "TD",
+    year: 2026,
+    notions: ["intégrale de Lebesgue", "convergence monotone", "lemme de Fatou"],
+    date: "2026-10-15",
+    size: "1,0 Mo",
+    pages: 3,
+    description: "Intégrale de Lebesgue, théorème de convergence monotone et lemme de Fatou.",
+  },
+  {
+    id: "proba-m1-corr",
+    title: "Martingales discrètes",
+    level: "M1",
+    subject: "Cours de Master 1",
+    type: "Corrigé",
+    year: 2025,
+    notions: ["martingales", "temps d'arrêt", "espérance conditionnelle"],
+    date: "2026-11-02",
+    size: "1,8 Mo",
+    pages: 7,
+    description:
+      "Corrigé du devoir sur les martingales, le théorème d'arrêt et les inégalités de Doob.",
+  },
+  {
+    id: "ana-m1-exam-2024",
+    title: "Annales Intégration et mesure",
+    level: "M1",
+    subject: "Cours de Master 1",
+    type: "Examen",
+    year: 2024,
+    notions: ["mesure", "intégrale de Lebesgue", "convergence dominée"],
+    date: "2026-10-08",
+    size: "2,1 Mo",
+    pages: 3,
+    description: "Tribus, mesures, théorèmes de convergence monotone et dominée.",
+  },
+  {
+    id: "af-m2-exam",
+    title: "Analyse fonctionnelle",
+    level: "M2",
+    subject: "Cours de Master 2",
+    type: "Examen",
+    year: 2025,
+    notions: ["espaces de Banach", "espaces de Hilbert", "opérateurs compacts"],
+    date: "2026-10-28",
+    size: "2,0 Mo",
+    pages: 4,
+    description:
+      "Théorèmes de Hahn-Banach et de Banach-Steinhaus, opérateurs compacts sur un Hilbert.",
+  },
+  {
+    id: "eq-m2-fiche",
+    title: "Fiche : stabilité de Lyapunov",
+    level: "M2",
+    subject: "Cours de Master 2",
+    type: "Fiche de cours",
+    year: 2026,
+    notions: ["stabilité", "fonction de Lyapunov", "portraits de phase"],
+    date: "2026-10-20",
+    size: "1,6 Mo",
+    pages: 4,
+    description: "Stabilité des points d'équilibre, linéarisation et fonctions de Lyapunov.",
+  },
+  {
+    id: "stats-m2-td",
+    title: "Statistique inférentielle — TD",
+    level: "M2",
+    subject: "Cours de Master 2",
+    type: "TD",
+    year: 2026,
+    notions: ["tests d'hypothèses", "régression linéaire"],
+    date: "2026-10-05",
+    size: "1,3 Mo",
+    pages: 5,
+    description: "Tests paramétriques, test du khi-deux et modèle de régression linéaire.",
+  },
 ];
 
 const EMPTY_DOCS: Doc[] = [];
@@ -207,18 +406,28 @@ export async function removeDoc(id: string): Promise<void> {
   remoteDocs.update((items) => items.filter((d) => d.id !== id));
 }
 
-export type DocFilters = { q?: string; niveau?: string; matiere?: string; type?: string; annee?: number };
+export type DocFilters = {
+  q?: string;
+  niveau?: string;
+  matiere?: string;
+  type?: string;
+  annee?: number;
+};
 
 /** Recherche par mots : chaque mot doit apparaître dans le titre, la matière, le type ou les notions. */
 export function filterDocs(docs: Doc[], f: DocFilters): Doc[] {
-  const words = normalize(f.q ?? "").split(/\s+/).filter(Boolean);
+  const words = normalize(f.q ?? "")
+    .split(/\s+/)
+    .filter(Boolean);
   return docs.filter((d) => {
     if (f.niveau && d.level !== f.niveau) return false;
     if (f.matiere && d.subject !== f.matiere) return false;
     if (f.type && d.type !== f.type) return false;
     if (f.annee && d.year !== f.annee) return false;
     if (words.length === 0) return true;
-    const hay = normalize([d.title, d.subject, d.type, d.level, String(d.year), ...d.notions].join(" "));
+    const hay = normalize(
+      [d.title, d.subject, d.type, d.level, String(d.year), ...d.notions].join(" "),
+    );
     return words.every((w) => hay.includes(w));
   });
 }

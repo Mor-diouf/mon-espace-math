@@ -10,7 +10,7 @@ import { pickNext, useAnnonces } from "@/lib/annonces";
 import { useDocs, useDocsStatus } from "@/lib/docs";
 import { isPending } from "@/lib/remote";
 import { levelStore, useHydrated, useLevel } from "@/lib/store";
-import { LEVEL_NAMES, LEVELS, SUBJECTS, todayISO } from "@/lib/subjects";
+import { LEVEL_NAMES, LEVELS, todayISO, uesOf, type UE } from "@/lib/subjects";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,6 +32,35 @@ export const Route = createFileRoute("/")({
   }),
   component: Index,
 });
+
+/** Tuile d'UE : symbole de la discipline, nom court, et le parcours si l'UE est au choix. */
+function UETile({ u }: { u: UE }) {
+  const Icon = u.icon;
+  return (
+    <Link
+      to="/catalogue"
+      search={{ matiere: u.name }}
+      aria-label={u.option ? `${u.name}, ${u.option}` : u.name}
+      className={`press flex h-20 flex-col items-center justify-center gap-1.5 rounded-2xl px-1 text-center ${u.tile}`}
+    >
+      {Icon ? (
+        <Icon aria-hidden className="h-7 w-7" />
+      ) : (
+        <span aria-hidden className="font-serif text-[1.75rem] italic leading-none">
+          {u.glyph}
+        </span>
+      )}
+      <span aria-hidden className="text-[0.8125rem] font-bold leading-none">
+        {u.short}
+      </span>
+      {u.option && (
+        <span aria-hidden className="-mt-0.5 text-[0.625rem] font-semibold leading-none opacity-80">
+          {u.option.replace("au choix · ", "")}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 function Index() {
   const navigate = useNavigate();
@@ -84,33 +113,28 @@ function Index() {
 
       <main className="px-4 pb-nav pt-3">
         <section>
-          <SectionTitle title="Matières">
+          <SectionTitle title={`Matières de ${level}`}>
             <Link to="/catalogue" className={sectionLink}>
               Catalogue <ArrowRight aria-hidden className="h-4 w-4" />
             </Link>
           </SectionTitle>
-          <div className="grid grid-cols-3 gap-2">
-            {SUBJECTS.map((s) => {
-              const Icon = s.icon;
-              return (
-                <Link
-                  key={s.name}
-                  to="/catalogue"
-                  search={{ matiere: s.name }}
-                  className={`press flex h-20 flex-col items-center justify-center gap-1.5 rounded-2xl ${s.tile}`}
-                >
-                  {Icon ? (
-                    <Icon aria-hidden className="h-7 w-7" />
-                  ) : (
-                    <span aria-hidden className="font-serif text-[1.75rem] italic leading-none">
-                      {s.glyph}
-                    </span>
-                  )}
-                  <span className="text-[0.8125rem] font-bold leading-none">{s.short}</span>
-                </Link>
-              );
-            })}
-          </div>
+          {/* Les UE du niveau de l'étudiant, rangées par semestre. */}
+          {([1, 2, undefined] as const).map((sem) => {
+            const ues = uesOf(level).filter((u) => u.semester === sem);
+            if (ues.length === 0) return null;
+            return (
+              <div key={sem ?? 0} className="mb-3">
+                {sem && (
+                  <p className="mb-1.5 text-xs font-bold text-muted-foreground">Semestre {sem}</p>
+                )}
+                <div className="grid grid-cols-3 gap-2">
+                  {ues.map((u) => (
+                    <UETile key={u.name} u={u} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </section>
 
         {next && (

@@ -17,7 +17,7 @@ import { TopBar } from "@/components/TopBar";
 import { addAnnonce, ANNONCE_CATS, removeAnnonce, useAnnonces } from "@/lib/annonces";
 import { recheckAuth, signIn, signOut, useAuth } from "@/lib/auth";
 import { addDoc, MAX_PDF_BYTES, removeDoc, useDocs, useDocsStatus } from "@/lib/docs";
-import { DOC_TYPES, formatDate, LEVELS, SUBJECTS } from "@/lib/subjects";
+import { DOC_TYPES, findUE, formatDate, LEVEL_NAMES, LEVELS, UES, uesOf } from "@/lib/subjects";
 import { supabaseReady } from "@/lib/supabase";
 
 export const Route = createFileRoute("/admin")({
@@ -227,6 +227,29 @@ function Field({
   );
 }
 
+/** Liste des UE rangées par niveau (« Licence 1 › Analyse 1 · S1 »). */
+function UESelect({ name }: { name: string }) {
+  return (
+    <span className="relative block">
+      <select name={name} defaultValue={UES[0]?.name} className={`${input} appearance-none pr-9`}>
+        {LEVELS.map((l) => (
+          <optgroup key={l} label={LEVEL_NAMES[l] ?? l}>
+            {uesOf(l).map((u) => (
+              <option key={u.name} value={u.name}>
+                {[u.name, u.semester && `S${u.semester}`, u.option].filter(Boolean).join(" · ")}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+      <ChevronDown
+        aria-hidden
+        className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground"
+      />
+    </span>
+  );
+}
+
 function Select({
   name,
   options,
@@ -295,7 +318,8 @@ function DocForm({ demo }: { demo: boolean }) {
       const doc = await addDoc(
         {
           title,
-          level: str(f, "level"),
+          // Le niveau découle de l'UE choisie : impossible de ranger un cours de M2 en M1.
+          level: findUE(str(f, "subject"))?.level ?? "L1",
           subject: str(f, "subject"),
           type: str(f, "type"),
           year: Number(str(f, "year")) || new Date().getFullYear(),
@@ -333,16 +357,11 @@ function DocForm({ demo }: { demo: boolean }) {
           className={input}
         />
       </Field>
-      <div className="grid grid-cols-2 gap-3">
-        <Field label="Niveau" required>
-          <Select name="level" options={LEVELS} />
-        </Field>
-        <Field label="Type" required>
-          <Select name="type" options={DOC_TYPES} />
-        </Field>
-      </div>
-      <Field label="Matière" required>
-        <Select name="subject" options={SUBJECTS.map((s) => s.name)} />
+      <Field label="Matière (UE)" required>
+        <UESelect name="subject" />
+      </Field>
+      <Field label="Type" required>
+        <Select name="type" options={DOC_TYPES} />
       </Field>
       <div className="grid grid-cols-2 gap-3">
         <Field label="Année">

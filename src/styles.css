@@ -72,6 +72,10 @@
   --color-s-stats: var(--s-stats);
   --color-s-topo: var(--s-topo);
   --color-s-eq: var(--s-eq);
+  --color-s-mesure: var(--s-mesure);
+  --color-s-calc: var(--s-calc);
+  --color-s-geo: var(--s-geo);
+  --color-s-fourier: var(--s-fourier);
   --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   /* Glyphes mathématiques (∫, α, ∂) : police à empattements du téléphone, rien à télécharger. */
   --font-serif: "Cambria Math", "STIX Two Math", Georgia, "Noto Serif", "Times New Roman", serif;
@@ -129,6 +133,10 @@
   --s-stats: oklch(0.51 0.16 35);
   --s-topo: oklch(0.48 0.085 225);
   --s-eq: oklch(0.5 0.1 75);
+  --s-mesure: oklch(0.5 0.1 185);
+  --s-calc: oklch(0.52 0.15 30);
+  --s-geo: oklch(0.5 0.1 75);
+  --s-fourier: oklch(0.5 0.13 140);
 
   --chart-1: oklch(0.5 0.1 168);
   --chart-2: oklch(0.47 0.17 258);
@@ -189,6 +197,10 @@
     --s-stats: oklch(0.8 0.12 40);
     --s-topo: oklch(0.82 0.09 220);
     --s-eq: oklch(0.84 0.12 80);
+    --s-mesure: oklch(0.82 0.1 185);
+    --s-calc: oklch(0.8 0.12 35);
+    --s-geo: oklch(0.84 0.12 80);
+    --s-fourier: oklch(0.82 0.12 140);
 
     --chart-1: oklch(0.72 0.13 165);
     --chart-2: oklch(0.8 0.11 258);

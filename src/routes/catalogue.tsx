@@ -7,7 +7,7 @@ import { OptionSheet, type Option } from "@/components/OptionSheet";
 import { TopBar } from "@/components/TopBar";
 import { filterDocs, useDocs, useDocsStatus, type DocFilters } from "@/lib/docs";
 import { isPending } from "@/lib/remote";
-import { DOC_TYPES, LEVEL_NAMES, LEVELS, SUBJECTS, subjectShort } from "@/lib/subjects";
+import { DOC_TYPES, findUE, LEVEL_NAMES, LEVELS, subjectShort, UES, uesOf } from "@/lib/subjects";
 
 /** Retire les filtres vides pour garder une adresse propre (/catalogue?matiere=Analyse). */
 function clean(f: DocFilters): DocFilters {
@@ -97,6 +97,23 @@ function Catalogue() {
     [allDocs],
   );
   const docs = useMemo(() => filterDocs(allDocs, { ...search, q }), [allDocs, search, q]);
+
+  // Matières proposées : les UE du niveau choisi (ou toutes), puis les anciennes matières
+  // encore présentes dans le catalogue.
+  const subjectOptions = useMemo<Option[]>(() => {
+    const ues = search.niveau ? uesOf(search.niveau) : UES;
+    const legacy = [...new Set(allDocs.map((d) => d.subject))]
+      .filter((s) => !findUE(s))
+      .sort((a, b) => a.localeCompare(b, "fr"));
+    return [
+      ...ues.map((u) => ({
+        v: u.name,
+        l: u.name,
+        sub: [u.level, u.semester && `S${u.semester}`, u.option].filter(Boolean).join(" · "),
+      })),
+      ...legacy.map((s) => ({ v: s, l: s, sub: "Ancienne matière" })),
+    ];
+  }, [search.niveau, allDocs]);
   const active = Object.keys(clean({ ...search, q })).length > 0;
 
   // Un filtre = une pastille. Elle affiche la valeur choisie et ouvre la liste des choix.
@@ -122,7 +139,7 @@ function Catalogue() {
       all: "Toutes les matières",
       value: search.matiere,
       shown: search.matiere && subjectShort(search.matiere),
-      options: SUBJECTS.map((s) => ({ v: s.name, l: s.name })),
+      options: subjectOptions,
     },
     type: {
       title: "Type",
@@ -232,7 +249,11 @@ function Catalogue() {
         {...(current ? { allLabel: current.all } : {})}
         onSelect={(v) => {
           if (sheet === "annee") update({ annee: v ? Number(v) : 0 });
-          else if (sheet) update({ [sheet]: v });
+          else if (sheet === "niveau") {
+            // Une UE d'un autre niveau ne donnerait aucun résultat : on la retire.
+            const ue = search.matiere ? findUE(search.matiere) : undefined;
+            update(ue && v && ue.level !== v ? { niveau: v, matiere: "" } : { niveau: v });
+          } else if (sheet) update({ [sheet]: v });
           setSheet(null);
         }}
       />

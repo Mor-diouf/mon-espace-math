@@ -1,6 +1,7 @@
-import { BarChart3, Dices, Network, Waves, type LucideIcon } from "lucide-react";
+import { GraduationCap, type LucideIcon } from "lucide-react";
 
 export const LEVELS = ["L1", "L2", "L3", "M1", "M2"] as const;
+export type Level = (typeof LEVELS)[number];
 export const LEVEL_NAMES: Record<string, string> = {
   L1: "Licence 1",
   L2: "Licence 2",
@@ -10,60 +11,106 @@ export const LEVEL_NAMES: Record<string, string> = {
 };
 export const DOC_TYPES = ["Examen", "TD", "Corrigé", "Fiche de cours"] as const;
 
-export type Subject = {
+/**
+ * Une discipline donne sa couleur et son symbole à toutes ses UE (Analyse 1 à 4 sont bleues).
+ * Les couleurs sont choisies pour rester distinctes entre UE d'un même niveau.
+ * Les classes sont écrites en entier pour que Tailwind les trouve.
+ */
+type Discipline = { tile: string; glyph?: string; icon?: LucideIcon };
+
+const D = {
+  analyse: { glyph: "∫", tile: "bg-s-analyse/13 text-s-analyse dark:bg-s-analyse/20" },
+  algebre: { glyph: "α", tile: "bg-s-algebre/13 text-s-algebre dark:bg-s-algebre/20" },
+  edp: { glyph: "Δ", tile: "bg-s-eq/13 text-s-eq dark:bg-s-eq/20" },
+  topo: { glyph: "⊂", tile: "bg-s-topo/13 text-s-topo dark:bg-s-topo/20" },
+  mesure: { glyph: "μ", tile: "bg-s-mesure/13 text-s-mesure dark:bg-s-mesure/20" },
+  calcul: { glyph: "∂", tile: "bg-s-calc/13 text-s-calc dark:bg-s-calc/20" },
+  proba: { glyph: "ℙ", tile: "bg-s-proba/13 text-s-proba dark:bg-s-proba/20" },
+  complexe: { glyph: "ℂ", tile: "bg-s-analyse/13 text-s-analyse dark:bg-s-analyse/20" },
+  geometrie: { glyph: "△", tile: "bg-s-geo/13 text-s-geo dark:bg-s-geo/20" },
+  fourier: { glyph: "ℱ", tile: "bg-s-fourier/13 text-s-fourier dark:bg-s-fourier/20" },
+  stats: { glyph: "σ", tile: "bg-s-stats/13 text-s-stats dark:bg-s-stats/20" },
+  master: { icon: GraduationCap, tile: "bg-secondary text-secondary-foreground" },
+} satisfies Record<string, Discipline>;
+
+/** Une UE (unité d'enseignement) telle qu'elle figure dans la maquette du département. */
+export type UE = Discipline & {
+  /** Nom enregistré dans le champ « matière » des documents. */
   name: string;
+  /** Nom court pour les tuiles et les listes. */
   short: string;
-  /** Tuile teintée : fond pâle + glyphe dans la couleur de la matière (lisible en clair comme en sombre). */
-  tile: string;
-  glyph?: string;
-  icon?: LucideIcon;
+  level: Level;
+  /** Semestre dans l'année (1 ou 2), absent tant que l'UE n'est pas précisée. */
+  semester?: 1 | 2;
+  /** UE à choisir entre deux parcours. */
+  option?: string;
 };
 
-// Une couleur = une matière. Le type de document (Examen, TD…) s'écrit en toutes lettres, sans couleur.
-// Les classes sont écrites en entier pour que Tailwind les trouve.
-export const SUBJECTS: Subject[] = [
-  {
-    name: "Analyse",
-    short: "Analyse",
-    glyph: "∫",
-    tile: "bg-s-analyse/13 text-s-analyse dark:bg-s-analyse/20",
-  },
-  {
-    name: "Algèbre",
-    short: "Algèbre",
-    glyph: "α",
-    tile: "bg-s-algebre/13 text-s-algebre dark:bg-s-algebre/20",
-  },
-  {
-    name: "Probabilités",
-    short: "Probabilités",
-    icon: Dices,
-    tile: "bg-s-proba/13 text-s-proba dark:bg-s-proba/20",
-  },
-  {
-    name: "Statistiques",
-    short: "Statistiques",
-    icon: BarChart3,
-    tile: "bg-s-stats/13 text-s-stats dark:bg-s-stats/20",
-  },
-  {
-    name: "Topologie",
-    short: "Topologie",
-    icon: Network,
-    tile: "bg-s-topo/13 text-s-topo dark:bg-s-topo/20",
-  },
-  {
-    name: "Équations différentielles",
-    short: "Équ. diff.",
-    icon: Waves,
-    tile: "bg-s-eq/13 text-s-eq dark:bg-s-eq/20",
-  },
+const ue = (
+  name: string,
+  short: string,
+  level: Level,
+  semester: 1 | 2 | undefined,
+  d: Discipline,
+  option?: string,
+): UE => ({
+  name,
+  short,
+  level,
+  ...(semester ? { semester } : {}),
+  ...d,
+  ...(option ? { option } : {}),
+});
+
+/** Maquette de la Licence de mathématiques de l'UASZ. Le Master sera détaillé plus tard. */
+export const UES: UE[] = [
+  ue("Analyse 1", "Analyse 1", "L1", 1, D.analyse),
+  ue("Algèbre 1", "Algèbre 1", "L1", 1, D.algebre),
+  ue("Analyse 2", "Analyse 2", "L1", 2, D.analyse),
+  ue("Algèbre 2", "Algèbre 2", "L1", 2, D.algebre),
+
+  ue("Analyse 3", "Analyse 3", "L2", 1, D.analyse),
+  ue("Algèbre 3", "Algèbre 3", "L2", 1, D.algebre),
+  ue("Analyse 4", "Analyse 4", "L2", 2, D.analyse),
+  ue("Équations aux dérivées partielles", "EDP", "L2", 2, D.edp),
+
+  ue("Topologie", "Topologie", "L3", 1, D.topo),
+  ue("Algèbre", "Algèbre", "L3", 1, D.algebre),
+  ue("Mesure et intégration", "Mesure & intég.", "L3", 1, D.mesure),
+  ue("Calcul différentiel", "Calcul diff.", "L3", 2, D.calcul),
+  ue("Probabilités", "Probabilités", "L3", 2, D.proba),
+  ue("Analyse complexe", "Analyse complexe", "L3", 2, D.complexe),
+  ue("Géométrie", "Géométrie", "L3", 2, D.geometrie, "au choix · maths pures"),
+  ue("Analyse de Fourier", "Fourier", "L3", 2, D.fourier, "au choix · maths appliquées"),
+
+  ue("Cours de Master 1", "Master 1", "M1", undefined, D.master),
+  ue("Cours de Master 2", "Master 2", "M2", undefined, D.master),
 ];
 
+/**
+ * Anciennes matières (avant les UE) : les documents déjà publiés gardent leur couleur
+ * et leur symbole. Le bureau peut corriger leur fiche pour choisir la bonne UE.
+ */
+const LEGACY: Record<string, Discipline & { short: string }> = {
+  Analyse: { short: "Analyse", ...D.analyse },
+  Algèbre: { short: "Algèbre", ...D.algebre },
+  Topologie: { short: "Topologie", ...D.topo },
+  Probabilités: { short: "Probabilités", ...D.proba },
+  Statistiques: { short: "Statistiques", ...D.stats },
+  "Équations différentielles": { short: "Équ. diff.", ...D.edp },
+};
+
+export const findUE = (name: string) => UES.find((u) => u.name === name);
+export const uesOf = (level: string) => UES.filter((u) => u.level === level);
+
+/** Couleur, symbole et nom court d'une matière, qu'elle soit une UE ou une ancienne matière. */
+export function subjectInfo(name: string): Discipline & { short: string } {
+  return findUE(name) ?? LEGACY[name] ?? { short: name, tile: FALLBACK_TILE };
+}
+
 const FALLBACK_TILE = "bg-secondary text-secondary-foreground";
-export const findSubject = (name: string) => SUBJECTS.find((s) => s.name === name);
-export const subjectTile = (name: string) => findSubject(name)?.tile ?? FALLBACK_TILE;
-export const subjectShort = (name: string) => findSubject(name)?.short ?? name;
+export const subjectTile = (name: string) => subjectInfo(name).tile;
+export const subjectShort = (name: string) => subjectInfo(name).short;
 
 /** « 2026-11-10 » → « 10 nov. 2026 » */
 export function formatDate(iso: string) {
