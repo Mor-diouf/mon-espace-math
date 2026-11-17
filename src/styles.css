@@ -1,0 +1,348 @@
+/*
+ * Tailwind v4 entry: config lives here, with no tailwind.config.js or PostCSS plugin.
+ * - Keep every @import in this top block, above @theme and the rest of the file. Install an
+ *   npm package before @importing its CSS. Never @import a remote URL (web fonts, CDN CSS): the
+ *   build resolves @import from the filesystem.
+ * - La police Manrope est embarquée (paquet @fontsource-variable/manrope) : elle s'affiche
+ *   même sans réseau. Ne pas la recharger depuis Google Fonts.
+ */
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+@import "@fontsource-variable/manrope/wght.css";
+
+/*
+ * Design system — couleurs de l'UASZ.
+ *
+ * Les trois verts viennent du logo officiel de l'université (uasz.sn) :
+ *   vert forêt   #18453c  -> --brand   (bandeau du haut, barre système)
+ *   vert émeraude #1b9a76 -> --ring, et en plus foncé (#167c5f) -> --primary (boutons)
+ *   vert citron  #9bc227  -> --lime    (accent, à doser)
+ *
+ * Tout est en oklch. Le thème clair est dans :root, le thème sombre dans le bloc
+ * @media (prefers-color-scheme: dark) : l'app suit le réglage du téléphone.
+ *
+ * Pour ajouter une couleur : la déclarer dans les DEUX thèmes, puis l'enregistrer
+ * dans @theme inline sous la forme --color-<nom>: var(--<nom>).
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-muted: var(--brand-muted);
+  --color-lime: var(--lime);
+  --color-lime-foreground: var(--lime-foreground);
+  --color-gold: var(--gold);
+  --color-pdf: var(--pdf);
+  --color-s-analyse: var(--s-analyse);
+  --color-s-algebre: var(--s-algebre);
+  --color-s-proba: var(--s-proba);
+  --color-s-stats: var(--s-stats);
+  --color-s-topo: var(--s-topo);
+  --color-s-eq: var(--s-eq);
+  --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Glyphes mathématiques (∫, α, ∂) : police à empattements du téléphone, rien à télécharger. */
+  --font-serif: "Cambria Math", "STIX Two Math", Georgia, "Noto Serif", "Times New Roman", serif;
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ───────────── Thème clair ───────────── */
+:root {
+  color-scheme: light dark;
+  --radius: 0.875rem;
+
+  --background: oklch(0.975 0.006 170);
+  --foreground: oklch(0.22 0.03 175);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.03 175);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.03 175);
+
+  --primary: oklch(0.5 0.1 168);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.945 0.02 170);
+  --secondary-foreground: oklch(0.3 0.05 175);
+  --muted: oklch(0.955 0.008 170);
+  --muted-foreground: oklch(0.47 0.025 175);
+  --accent: oklch(0.93 0.035 168);
+  --accent-foreground: oklch(0.3 0.06 175);
+  --destructive: oklch(0.55 0.21 27);
+  --destructive-foreground: oklch(0.99 0 0);
+
+  --border: oklch(0.9 0.012 170);
+  --input: oklch(0.62 0.03 172);
+  --ring: oklch(0.612 0.118 168);
+
+  /* Bandeau UASZ */
+  --brand: oklch(0.356 0.052 178);
+  --brand-foreground: oklch(0.985 0.005 170);
+  --brand-muted: oklch(0.86 0.03 172);
+  --lime: oklch(0.759 0.176 124);
+  --lime-foreground: oklch(0.25 0.05 160);
+
+  --gold: oklch(0.66 0.135 70);
+  --pdf: oklch(0.55 0.2 27);
+
+  /* Une couleur = une matière, et rien d'autre. */
+  --s-analyse: oklch(0.47 0.17 258);
+  --s-algebre: oklch(0.47 0.19 300);
+  --s-proba: oklch(0.49 0.19 345);
+  --s-stats: oklch(0.51 0.16 35);
+  --s-topo: oklch(0.48 0.085 225);
+  --s-eq: oklch(0.5 0.1 75);
+
+  --chart-1: oklch(0.5 0.1 168);
+  --chart-2: oklch(0.47 0.17 258);
+  --chart-3: oklch(0.51 0.16 35);
+  --chart-4: oklch(0.759 0.176 124);
+  --chart-5: oklch(0.47 0.19 300);
+
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.22 0.03 175);
+  --sidebar-primary: oklch(0.5 0.1 168);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.93 0.035 168);
+  --sidebar-accent-foreground: oklch(0.3 0.06 175);
+  --sidebar-border: oklch(0.9 0.012 170);
+  --sidebar-ring: oklch(0.612 0.118 168);
+
+  --shadow-card: 0 1px 2px oklch(0.22 0.03 175 / 6%), 0 4px 14px -8px oklch(0.22 0.03 175 / 14%);
+  --shadow-bar: 0 -1px 0 var(--border), 0 -8px 24px -16px oklch(0.22 0.03 175 / 22%);
+}
+
+/* ───────────── Thème sombre (suit le téléphone) ───────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.185 0.02 175);
+    --foreground: oklch(0.955 0.01 170);
+    --card: oklch(0.235 0.026 175);
+    --card-foreground: oklch(0.955 0.01 170);
+    --popover: oklch(0.255 0.028 175);
+    --popover-foreground: oklch(0.955 0.01 170);
+
+    --primary: oklch(0.72 0.13 165);
+    --primary-foreground: oklch(0.18 0.03 175);
+    --secondary: oklch(0.29 0.03 175);
+    --secondary-foreground: oklch(0.93 0.015 170);
+    --muted: oklch(0.27 0.022 175);
+    --muted-foreground: oklch(0.76 0.025 172);
+    --accent: oklch(0.31 0.04 172);
+    --accent-foreground: oklch(0.95 0.02 170);
+    --destructive: oklch(0.68 0.19 25);
+    --destructive-foreground: oklch(0.18 0.03 25);
+
+    --border: oklch(0.33 0.028 175);
+    --input: oklch(0.54 0.03 175);
+    --ring: oklch(0.72 0.13 165);
+
+    --brand: oklch(0.255 0.038 177);
+    --brand-foreground: oklch(0.97 0.008 170);
+    --brand-muted: oklch(0.8 0.03 172);
+    --lime: oklch(0.8 0.17 124);
+    --lime-foreground: oklch(0.22 0.05 160);
+
+    --gold: oklch(0.82 0.14 85);
+    --pdf: oklch(0.56 0.2 27);
+
+    --s-analyse: oklch(0.8 0.11 258);
+    --s-algebre: oklch(0.8 0.12 300);
+    --s-proba: oklch(0.8 0.12 345);
+    --s-stats: oklch(0.8 0.12 40);
+    --s-topo: oklch(0.82 0.09 220);
+    --s-eq: oklch(0.84 0.12 80);
+
+    --chart-1: oklch(0.72 0.13 165);
+    --chart-2: oklch(0.8 0.11 258);
+    --chart-3: oklch(0.8 0.12 40);
+    --chart-4: oklch(0.8 0.17 124);
+    --chart-5: oklch(0.8 0.12 300);
+
+    --sidebar: oklch(0.235 0.026 175);
+    --sidebar-foreground: oklch(0.955 0.01 170);
+    --sidebar-primary: oklch(0.72 0.13 165);
+    --sidebar-primary-foreground: oklch(0.18 0.03 175);
+    --sidebar-accent: oklch(0.31 0.04 172);
+    --sidebar-accent-foreground: oklch(0.95 0.02 170);
+    --sidebar-border: oklch(0.33 0.028 175);
+    --sidebar-ring: oklch(0.72 0.13 165);
+
+    --shadow-card: 0 0 0 1px var(--border);
+    --shadow-bar: 0 -1px 0 var(--border);
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Pas de voile gris au toucher : chaque élément a son propre retour (classes press / press-row). */
+    -webkit-tap-highlight-color: transparent;
+    /* Pas de « tirer pour recharger » ni de rebond de page : c'est une app, pas un site. */
+    overscroll-behavior-y: none;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  /* Les commandes ne se sélectionnent pas comme du texte et n'ouvrent pas de menu au toucher long. */
+  button,
+  a,
+  label,
+  [role="tab"] {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
+  }
+
+  /* 16 px minimum : en dessous, l'iPhone zoome tout seul quand on touche un champ. */
+  input,
+  textarea,
+  select {
+    font-size: 1rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Retour visuel au toucher — boutons, pastilles, tuiles. */
+@utility press {
+  transition:
+    transform 120ms ease,
+    opacity 120ms ease,
+    background-color 120ms ease;
+  &:active {
+    transform: scale(0.97);
+    opacity: 0.85;
+  }
+}
+
+/* Retour visuel au toucher — lignes de liste pleine largeur (pas de changement de taille). */
+@utility press-row {
+  transition: background-color 120ms ease;
+  &:active {
+    background-color: var(--color-accent);
+  }
+}
+
+/* Élargit la zone tactile de 4 px de chaque côté sans changer l'aspect (pastilles de 40 px -> 48 px). */
+@utility hit {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+  }
+}
+
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+@utility shadow-bar {
+  box-shadow: var(--shadow-bar);
+}
+
+/* Encoche, barre d'état et zone des gestes du téléphone. */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* Laisse la place à la barre d'onglets (64 px) + zone des gestes. */
+@utility pb-nav {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom) + 1.5rem);
+}
+/* Laisse la place à la barre d'action fixe des écrans de détail (80 px) + zone des gestes. */
+@utility pb-action {
+  padding-bottom: calc(5rem + env(safe-area-inset-bottom) + 1.5rem);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Quadrillage discret du bandeau (papier millimétré). */
+@utility math-grid {
+  background-image:
+    linear-gradient(oklch(1 0 0 / 5%) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(1 0 0 / 5%) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Écran de bienvenue : visible seulement si le script de __root.tsx a marqué un premier lancement. */
+.first-run-only {
+  display: none;
+}
+html.first-run .first-run-only {
+  display: block;
+}
+
+/* Transition entre écrans : fondu court ; la barre d'onglets ne bouge pas. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 160ms;
+}
+.vt-bottom-nav {
+  view-transition-name: bottom-nav;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
