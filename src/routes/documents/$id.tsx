@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import type { MouseEvent } from "react";
 import { BookOpen, CircleCheck, CloudDownload, Download, FileQuestion, Star } from "lucide-react";
 import { toast } from "sonner";
 import { DocList, downloadSoon, SubjectTile, useOfflineToggle } from "@/components/DocRow";
 import { ActionBar, btnOutline, btnPrimary, DemoNote, EmptyState, Pending } from "@/components/kit";
 import { barButton, TopBar } from "@/components/TopBar";
 import { DOCS, useDoc, useDocs, useDocsStatus, useFavorites, type Doc } from "@/lib/docs";
+import { openStored, pdfName } from "@/lib/offline";
 import { isPending } from "@/lib/remote";
 import { formatDate, subjectTile } from "@/lib/subjects";
 
@@ -85,12 +87,18 @@ function DocumentPage() {
   );
 }
 
-/** Nom de fichier propre pour le téléchargement : « Annales Analyse 1 — session 1.pdf ». */
-const pdfName = (d: Doc) => `${d.title.replace(/[\\/:*?"<>|]+/g, " ").trim() || "document"}.pdf`;
-
 function DocDetail({ d, demo }: { d: Doc; demo: boolean }) {
   const [off, toggleOffline] = useOfflineToggle();
   const saved = off.includes(d.id);
+  const downloadUrl = d.fileUrl && `${d.fileUrl}?download=${encodeURIComponent(pdfName(d))}`;
+  // Document gardé hors ligne : on ouvre la copie du téléphone (sans réseau, sans consommer de données).
+  const downloadFromPhone = (e: MouseEvent) => {
+    if (!saved || !d.fileUrl) return;
+    e.preventDefault();
+    void openStored(d, true).then((ok) => {
+      if (!ok && downloadUrl) location.assign(downloadUrl);
+    });
+  };
   const related = useDocs()
     .filter((x) => x.id !== d.id && x.subject === d.subject)
     .slice(0, 3);
@@ -141,10 +149,7 @@ function DocDetail({ d, demo }: { d: Doc; demo: boolean }) {
         </dl>
 
         {d.fileUrl ? (
-          <a
-            href={`${d.fileUrl}?download=${encodeURIComponent(pdfName(d))}`}
-            className={`${btnOutline} mt-3 w-full`}
-          >
+          <a href={downloadUrl} onClick={downloadFromPhone} className={`${btnOutline} mt-3 w-full`}>
             <Download className="h-5 w-5" />
             Télécharger le PDF
           </a>
@@ -190,15 +195,10 @@ function DocDetail({ d, demo }: { d: Doc; demo: boolean }) {
 
       <ActionBar>
         {d.fileUrl ? (
-          <a
-            href={d.fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${btnPrimary} flex-1`}
-          >
+          <Link to="/documents/$id/lire" params={{ id: d.id }} className={`${btnPrimary} flex-1`}>
             <BookOpen className="h-5 w-5" />
             Lire le document
-          </a>
+          </Link>
         ) : (
           <button onClick={read} className={`${btnPrimary} flex-1`}>
             <BookOpen className="h-5 w-5" />

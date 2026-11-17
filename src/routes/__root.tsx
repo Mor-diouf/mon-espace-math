@@ -15,6 +15,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { BottomNav } from "@/components/BottomNav";
 import { Onboarding } from "@/components/Onboarding";
+import { registerServiceWorker } from "@/lib/offline";
 
 function NotFoundComponent() {
   return (
@@ -148,6 +149,8 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // Mode hors ligne : l'app et les PDF gardés restent disponibles sans réseau.
+  useEffect(registerServiceWorker, []);
 
   return (
     <QueryClientProvider client={queryClient}>

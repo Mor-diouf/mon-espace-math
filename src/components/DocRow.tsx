@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
 import { CircleCheck, CloudDownload } from "lucide-react";
 import { toast } from "sonner";
-import { type Doc, useOffline } from "@/lib/docs";
+import { type Doc, useDocsStatus, useOffline } from "@/lib/docs";
+import { forgetDoc, storeDoc } from "@/lib/offline";
+import { offlineStore } from "@/lib/store";
 import { findSubject, subjectShort, subjectTile } from "@/lib/subjects";
 
 /** Tuile carrée à la couleur de la matière, avec son glyphe. C'est elle qui permet de repérer un document d'un coup d'œil. */
@@ -34,18 +36,43 @@ export function downloadSoon() {
   });
 }
 
-/** Bascule « hors ligne » avec un message de confirmation. */
+/**
+ * Bascule « hors ligne » avec un message de confirmation.
+ * Quand le document a un PDF, il est réellement enregistré sur le téléphone.
+ */
 export function useOfflineToggle() {
   const [off, toggle] = useOffline();
+  const demo = useDocsStatus() === "demo";
   const toggleOffline = (d: Doc) => {
     const wasSaved = off.includes(d.id);
     toggle(d.id);
-    if (wasSaved) toast("Retiré des documents hors ligne");
-    else
+    if (wasSaved) {
+      void forgetDoc(d);
+      toast("Retiré des documents hors ligne");
+      return;
+    }
+    if (!d.fileUrl) {
       toast("Ajouté à vos documents hors ligne", {
-        description:
-          "Démo : le fichier sera réellement enregistré quand les vrais PDF seront en ligne.",
+        description: demo
+          ? "Démo : le fichier sera réellement enregistré quand les vrais PDF seront en ligne."
+          : "Le PDF de ce document n'est pas encore en ligne : seule la fiche est gardée.",
       });
+      return;
+    }
+    toast.promise(storeDoc(d), {
+      loading: "Enregistrement sur ce téléphone…",
+      success: {
+        message: "Enregistré sur ce téléphone",
+        description: "Vous pourrez l'ouvrir sans connexion, depuis « Mes documents ».",
+      },
+      error: () => {
+        offlineStore.set((cur) => cur.filter((x) => x !== d.id));
+        return {
+          message: "Le PDF n'a pas pu être enregistré",
+          description: "Vérifiez votre connexion, puis réessayez.",
+        };
+      },
+    });
   };
   return [off, toggleOffline] as const;
 }

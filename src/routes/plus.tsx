@@ -20,6 +20,7 @@ import {
   useLevel,
   useOffline,
 } from "@/lib/store";
+import { forgetAll } from "@/lib/offline";
 import { LEVEL_NAMES, LEVELS } from "@/lib/subjects";
 
 export const Route = createFileRoute("/plus")({
@@ -48,8 +49,10 @@ function Plus() {
   const [off] = useOffline();
 
   const clear = (what: "off" | "fav") => {
-    if (what === "off") offlineStore.set([]);
-    else favoritesStore.set([]);
+    if (what === "off") {
+      offlineStore.set([]);
+      void forgetAll();
+    } else favoritesStore.set([]);
     toast(what === "off" ? "Documents hors ligne retirés" : "Favoris effacés");
   };
 

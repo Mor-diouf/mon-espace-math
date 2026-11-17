@@ -17,6 +17,7 @@ import { Route as PlusRouteImport } from './routes/plus'
 import { Route as AnnoncesIndexRouteImport } from './routes/annonces/index'
 import { Route as AnnoncesIdRouteImport } from './routes/annonces/$id'
 import { Route as DocumentsIdRouteImport } from './routes/documents/$id'
+import { Route as DocumentsIdLireRouteImport } from './routes/documents/$id_.lire'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const DocumentsIdRoute = DocumentsIdRouteImport.update({
   path: '/documents/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DocumentsIdLireRoute = DocumentsIdLireRouteImport.update({
+  id: '/documents/$id_/lire',
+  path: '/documents/$id/lire',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/annonces/$id': typeof AnnoncesIdRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/annonces/': typeof AnnoncesIndexRoute
+  '/documents/$id/lire': typeof DocumentsIdLireRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/annonces/$id': typeof AnnoncesIdRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/annonces': typeof AnnoncesIndexRoute
+  '/documents/$id/lire': typeof DocumentsIdLireRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/annonces/$id': typeof AnnoncesIdRoute
   '/documents/$id': typeof DocumentsIdRoute
   '/annonces/': typeof AnnoncesIndexRoute
+  '/documents/$id_/lire': typeof DocumentsIdLireRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/annonces/$id'
     | '/documents/$id'
     | '/annonces/'
+    | '/documents/$id/lire'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/annonces/$id'
     | '/documents/$id'
     | '/annonces'
+    | '/documents/$id/lire'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/annonces/$id'
     | '/documents/$id'
     | '/annonces/'
+    | '/documents/$id_/lire'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   AnnoncesIdRoute: typeof AnnoncesIdRoute
   DocumentsIdRoute: typeof DocumentsIdRoute
   AnnoncesIndexRoute: typeof AnnoncesIndexRoute
+  DocumentsIdLireRoute: typeof DocumentsIdLireRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/documents/$id_/lire': {
+      id: '/documents/$id_/lire'
+      path: '/documents/$id/lire'
+      fullPath: '/documents/$id/lire'
+      preLoaderRoute: typeof DocumentsIdLireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   AnnoncesIdRoute: AnnoncesIdRoute,
   DocumentsIdRoute: DocumentsIdRoute,
   AnnoncesIndexRoute: AnnoncesIndexRoute,
+  DocumentsIdLireRoute: DocumentsIdLireRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
